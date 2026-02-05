@@ -7,10 +7,6 @@
 	"name": "file-based-hono",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-01-31",
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./public"
-	},
 	"observability": {
 		"enabled": true
 	}

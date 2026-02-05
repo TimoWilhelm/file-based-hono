@@ -2,14 +2,16 @@
 	"name": "file-based-hono",
 	"type": "module",
 	"scripts": {
-		"dev": "wrangler dev",
-		"deploy": "wrangler deploy --minify",
+		"generate-routes": "bun scripts/generate-routes.ts",
+		"dev": "bun run generate-routes && wrangler dev",
+		"deploy": "bun run generate-routes && wrangler deploy --minify",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
 	},
 	"dependencies": {
 		"hono": "^4.11.7"
 	},
 	"devDependencies": {
+		"@types/node": "^22.0.0",
 		"wrangler": "^4.62.0"
 	}
 }

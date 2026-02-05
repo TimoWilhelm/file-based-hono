@@ -1,9 +1,5 @@
-import { Hono } from "hono";
+import { createFileRouter } from "./router";
 
-const app = new Hono<{ Bindings: CloudflareBindings }>();
-
-app.get("/message", (c) => {
-  return c.text("Hello Hono!");
-});
+const app = createFileRouter();
 
 export default app;
