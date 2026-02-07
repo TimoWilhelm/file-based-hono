@@ -1,5 +1,3 @@
-import { createFileRouter } from "./router";
-
-const app = createFileRouter();
+import app from "virtual:file-routes";
 
 export default app;

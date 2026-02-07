@@ -2,16 +2,19 @@
 	"name": "file-based-hono",
 	"type": "module",
 	"scripts": {
-		"generate-routes": "bun scripts/generate-routes.ts",
-		"dev": "bun run generate-routes && wrangler dev",
-		"deploy": "bun run generate-routes && wrangler deploy --minify",
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite build && vite preview",
+		"deploy": "vite build && wrangler deploy",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
 	},
 	"dependencies": {
 		"hono": "^4.11.7"
 	},
 	"devDependencies": {
+		"@cloudflare/vite-plugin": "^1.23.1",
 		"@types/node": "^22.0.0",
+		"vite": "^7.3.1",
 		"wrangler": "^4.62.0"
 	}
 }
