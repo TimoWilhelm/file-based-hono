@@ -1,8 +1,38 @@
 # file-based-hono
 
-File-based routing for [Hono](https://hono.dev/) on Cloudflare Workers, powered by a custom [Vite](https://vite.dev/) plugin and the [@cloudflare/vite-plugin](https://developers.cloudflare.com/workers/vite-plugin/).
+File-based routing for [Hono](https://hono.dev/) on Cloudflare Workers, powered by a custom [Vite](https://vite.dev/) plugin and [@cloudflare/vite-plugin](https://developers.cloudflare.com/workers/vite-plugin/).
 
-Just place route files in `src/routes/` — no manual router or code generation step needed. The custom Vite plugin scans the routes directory and generates a virtual module at dev/build time with full HMR support.
+## Vite Plugin Setup
+
+Add `fileBasedRouter()` to your Vite config:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import { fileBasedRouter } from "./plugins/file-based-router";
+
+export default defineConfig({
+  plugins: [fileBasedRouter(), cloudflare()],
+});
+```
+
+The plugin generates a `virtual:file-routes` virtual module that exports a fully configured Hono app. Your Worker entry point just re-exports it:
+
+```ts
+// src/index.ts
+import app from "virtual:file-routes";
+
+export default app;
+```
+
+No manual router wiring or code generation step needed — routes are resolved at dev/build time with full HMR support.
+
+### Options
+
+| Option | Default | Description |
+|---|---|---|
+| `routesDir` | `"src/routes"` | Directory to scan for route files |
 
 ## Route Conventions
 
@@ -41,9 +71,6 @@ bun run dev
 
 ## How It Works
 
-The custom Vite plugin (`plugins/file-based-router.ts`) uses Vite's virtual module system:
-
-1. Scans `src/routes/` for `.ts` files at dev/build time
-2. Generates a `virtual:file-routes` module that creates a Hono app with all routes registered
-3. `src/index.ts` simply re-exports the virtual module as the Worker entry point
-4. In dev mode, adding or removing route files triggers a full reload automatically
+1. The plugin scans `src/routes/` for `.ts` files and generates a `virtual:file-routes` module with all routes registered on a Hono app
+2. Static routes are prioritized over dynamic (`:param`) routes
+3. Adding or removing route files in dev mode triggers an automatic full reload
